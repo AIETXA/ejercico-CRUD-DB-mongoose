@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { taskService } from "./services/taskService";
+import TaskForm from "./components/TaskForm";
 
 export default function App() {
     const [ tasks, setTasks ] = useState([]);
     const [ loading, setLoading ] = useState(true);
     const [ error, setError ] = useState('');
+    const [ success, setSuccess ] = useState('');
 
     useEffect(() => {
         loadTasks();
@@ -23,6 +25,17 @@ export default function App() {
         }
     };
 
+    const handleCreateTask = async (title) => {
+        try {
+            await taskService.create(title);
+            setSuccess('¡Tarea creada exitosamente!');
+            loadTasks();
+            setTimeout(() => setSuccess(''), 3000);
+        } catch (err) {
+            setError('Error al crear la tarea');
+        }
+    };
+
     return (
         <div className="min-h-screen bg-gray-100 p-8">
         <div className="max-w-4xl mx-auto">
@@ -38,6 +51,14 @@ export default function App() {
           </div>
         )}
 
+         {success && (
+          <div className="mb-4 bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
+            <p className="text-green-800">{success}</p>
+          </div>
+        )}
+
+        <TaskForm onTaskCreated={handleCreateTask} />
+        
         {!loading && !error && (
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold mb-4">
