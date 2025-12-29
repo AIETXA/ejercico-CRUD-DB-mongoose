@@ -11,20 +11,24 @@ export const taskService = {
         }
     },
 
-    create: async(title) => {
+    create: async(taskData) => {
         try {
-            const response = await fetch(`${API_URL}/create`, {
+
+            const response = await fetch(`${API_URL}/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json'},
-                body: JSON.stringify({title})
+                body: JSON.stringify(taskData)
             });
-            if(!response.ok) throw new Error('Error al crear la tarea');
+
+            if(!response.ok) 
+            throw new Error('Error al crear la tarea');
             return await response.json();
         } catch(error) {
-            console.error('Error:', error);
+            console.error('Error completo:', error);
             throw error;
         }
     },
+
 
     update: async(id, title) => {
         try {

@@ -25,12 +25,12 @@ export default function App() {
         }
     };
 
-    const handleCreateTask = async (title) => {
+    const handleCreateTask = async (taskData) => {
         try {
-            await taskService.create(title);
+            await taskService.create(taskData);
             setSuccess('¡Tarea creada exitosamente!');
             loadTasks();
-            setTimeout(() => setSuccess(''), 3000);
+            setTimeout(() => setSuccess(''), 2000);
         } catch (err) {
             setError('Error al crear la tarea');
         }

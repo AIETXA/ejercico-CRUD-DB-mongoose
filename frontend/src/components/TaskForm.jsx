@@ -7,7 +7,12 @@ export default function TaskForm({ onTaskCreated }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         if(title.trim()) {
-            onTaskCreated(title);
+            const newTask = {
+                title: title.trim(),
+                descripcion: '',
+                completed: false
+            }
+            onTaskCreated(newTask);
             setTitle('');
         }
     };
@@ -29,7 +34,8 @@ export default function TaskForm({ onTaskCreated }) {
                 onChange={(e) => setTitle(e.target.value)}
                 onKeyPress={handleKeyPress}
                 className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
+            />
+
             <button
                 onClick={handleSubmit}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors shadow-md hover:shadow-lg"
