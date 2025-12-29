@@ -1,8 +1,9 @@
 import React , { useState} from "react";
-import { Plus } from 'lucide-react';
+import { Plus, Bell } from 'lucide-react';
 
 export default function TaskForm({ onTaskCreated }) {
     const [ title, setTitle ] = useState('');
+    const [ reminderDate, setReminderDate ] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -10,10 +11,12 @@ export default function TaskForm({ onTaskCreated }) {
             const newTask = {
                 title: title.trim(),
                 descripcion: '',
-                completed: false
+                completed: false,
+                reminderDate: reminderDate||null
             }
             onTaskCreated(newTask);
             setTitle('');
+            setReminderDate('')
         }
     };
 
@@ -35,6 +38,19 @@ export default function TaskForm({ onTaskCreated }) {
                 onKeyPress={handleKeyPress}
                 className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
+
+            <div className="flex items-center gap-3">
+                <Bell size={20} className="text-gray-500"/>
+                <label className="text-sm text-gray-600 font-medium">
+                    Recordatorio (opcional):
+                </label>
+                <input
+                    type="datetime-local"
+                    value={reminderDate}
+                    onChange={(e) => setReminderDate(e.target.value)}
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+            </div>
 
             <button
                 onClick={handleSubmit}

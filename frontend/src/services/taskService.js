@@ -30,12 +30,12 @@ export const taskService = {
     },
 
 
-    update: async(id, title) => {
+    update: async(id, updateData) => {
         try {
-            const response = await fetch(`${API_URL}/id/${id}`, {
+            const response = await fetch(`${API_URL}/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type' : 'application/json'},
-                body: JSON.stringify({title})
+                body: JSON.stringify(updateData)
             });
             if(!response.ok) throw new Error('Error al actualizar la tarea');
             return await response.json();
@@ -60,13 +60,13 @@ export const taskService = {
 
     delete: async (id) => {
         try {
-            const response = await fetch(`${API_URL}/id/${id}`, {
+            const response = await fetch(`${API_URL}/${id}`, {
                 method: 'DELETE'
             });
             if (!response.ok) throw new Error('Error al eliminar la tarea');
             return await response.json();
         } catch(error) {
-            console.log('Erros:', error);
+            console.log('Error:', error);
             throw error;
         }
     }

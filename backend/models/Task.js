@@ -8,6 +8,10 @@ const TaskSchema = new mongoose.Schema({
     completed: {
         type: Boolean,
         default: false
+    },
+    reminderDate: {
+        type:Date,
+        required:false
     }
 }, {
     timestamps: true
