@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { taskService } from "./services/taskService";
 import TaskForm from "./components/TaskForm";
+import TaskList from "./components/TaskList";
 
 export default function App() {
     const [ tasks, setTasks ] = useState([]);
@@ -36,49 +37,70 @@ export default function App() {
         }
     };
 
-    return (
-        <div className="min-h-screen bg-gray-100 p-8">
-        <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">
-          Gestor de Tareas
-        </h1>
+    const handleDeleteTask = async (id) => {
+      if(window.confirm('¿Estas seguro de que quieres eliminar la tarea?')) {
+        try {
+          await taskService.delete(id);
+          setSuccess('Tarea eliminada');
+          loadTasks();
+          setTimeout(() => setSuccess(''), 2000);
+        } catch(err) {
+          setError('No se pudo eliminar la tarea')
+        }
+      }
+    };
 
-        {loading && <p className="text-gray-600">Cargando tareas...</p>}
-        
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {error}
-          </div>
-        )}
+    const handleToggleComplete = async (id, completed) => {
+      try {
+        await taskService.update(id, {completed});
+        loadTasks();
+      } catch(err) {
+        setError('No se pudo actualizar la tarea')
+      }
+    };
+
+    const handleEditTask = (task) => {
+      alert(`Editar tarea:${task.title}`)
+    };
+
+
+
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+          <div className="max-w-4xl mx-auto">
+            <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+              Gestor de Tareas
+            </h1>
+
+          {loading && (
+            <div className="text-center py-8">
+              <p className="text-gray-600 text-lg">Cargando tareas...</p>
+            </div>  
+          )}
+          
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+              {error}
+            </div>
+          )}
 
          {success && (
           <div className="mb-4 bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
-            <p className="text-green-800">{success}</p>
+            <p className="text-green-800 font-medium">{success}</p>
           </div>
-        )}
+          )}
 
         <TaskForm onTaskCreated={handleCreateTask} />
         
-        {!loading && !error && (
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold mb-4">
-              Tareas encontradas: {tasks.length}
-            </h2>
-            {tasks.length === 0 ? (
-              <p className="text-gray-500">No hay tareas todavía</p>
-            ) : (
-              <ul className="space-y-2">
-                {tasks.map(task => (
-                  <li key={task._id} className="border-b pb-2">
-                    <p className="font-medium">{task.title}</p>
-                    <p className="text-sm text-gray-500">
-                      Estado: {task.completed ? '✅ Completada' : '⏳ Pendiente'}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+        {!loading && (
+          <TaskList
+          tasks={tasks}
+          onDelete={handleDeleteTask}
+          onEdit={handleEditTask}
+          onToggleComplete={handleToggleComplete}
+          />
+
+         
         )}
       </div>
     </div>
