@@ -1,5 +1,5 @@
 import React from "react";
-import { Trash2, Edit, Check, X } from 'lucide-react';
+import { Trash2, Edit, Check, Bell } from 'lucide-react';
 
 export default function TaskList({tasks, onEdit, onDelete, onToggleComplete}) {
     if(!tasks || tasks.length === 0) {
@@ -10,7 +10,15 @@ export default function TaskList({tasks, onEdit, onDelete, onToggleComplete}) {
         );
     }
 
+    console.log('Tareas recibidas:', tasks);
+    tasks.forEach(task => {
+        console.log(`Tarea: ${task.title}, Reminder: ${task.reminderDate}`);
+    });
+
+
     return(
+
+
         <div className="space-y-4">
             {tasks.map((task) => (
                 <div 
@@ -19,6 +27,7 @@ export default function TaskList({tasks, onEdit, onDelete, onToggleComplete}) {
                         task.completed ? 'border-l-4 border-green-500' : 'border-l-4 border-blue-500'
                     }`}
                 >
+
         <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
@@ -38,11 +47,44 @@ export default function TaskList({tasks, onEdit, onDelete, onToggleComplete}) {
                                     }`}
                     >
                         {task.title}
-                    </h3>    
-                </div>
+                        
+                    </h3>  
+
+                    {task.reminderDate && (
+                        <div className="relative group">
+                            <Bell className="w-5 h-5 text-yellow-500 cursor-pointer"/>
+                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 text-white text-sm rounded-lg p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 shadow-xl pointer-events-none">                                <div className="text-xs font-semibold mb-1">Recordatorio:</div>
+                              <div className="text-xs mb-1 flex items-center gap-2">
+                                    <span>📆</span>
+                                    <span>
+                                    {new Date(task.reminderDate).toLocaleDateString('es-ES', { 
+                                        weekday: 'short',
+                                        day: '2-digit', 
+                                        month: 'short', 
+                                        year: 'numeric' 
+                                    })}
+                                    </span>
+                                </div>
+                                <div className="text-xs flex items-center gap-2">
+                                    <span>🕐</span>
+                                    <span>{new Date(task.reminderDate).toLocaleTimeString('es-ES', { 
+                                        hour: '2-digit', 
+                                        minute: '2-digit' 
+                                    })}</span>
+                                </div>
+
+                                <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-gray-900"></div>
+                            </div>
+                        </div>    
+                        
+                    )}
+
                 {task.description && (
                     <p className="text-gray-600 ml-9">{task.description}</p>
+
                 )}
+            </div>
+
             </div>
 
              <div className="flex gap-2">
@@ -73,6 +115,7 @@ export default function TaskList({tasks, onEdit, onDelete, onToggleComplete}) {
                     {task.completed ? 'Completada' : 'Pendiente'}
                 </span>
             </div>
+
             </div>
 
 
