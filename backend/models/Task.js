@@ -12,7 +12,13 @@ const TaskSchema = new mongoose.Schema({
     reminderDate: {
         type:Date,
         required:false
+    },
+    priority: {
+        type: String,
+        enum: ['high','medium', 'low'],
+        default: 'medium'
     }
+
 }, {
     timestamps: true
 });
