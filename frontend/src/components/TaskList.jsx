@@ -15,7 +15,7 @@ const getPriorityConfig = (priority) => {
         case 'high':
             return {
                 icon: AlertCircle,
-                color: 'text-red-600',
+                color: 'text-[#EF4444]',
                 bg: 'bg-red-100',
                 border: 'border-red-500',
                 label: 'Alta'
@@ -52,7 +52,7 @@ const getPriorityConfig = (priority) => {
         return (
                 <div 
                 key={task._id} 
-                className={`bg-white rounded-xl shadow-lg p-6 transition-all hover:shadow-xl ${
+                className={`bg-slate-800 rounded-xl shadow-lg p-6 transition-all hover:shadow-xl ${
                         task.completed ? 'border-l-4 border-green-500' : 'border-l-4 border-blue-500'
                     }`}
                 >
@@ -112,12 +112,7 @@ const getPriorityConfig = (priority) => {
                     <p className="text-gray-600 ml-9">{task.description}</p>
 
                 )}
-                {!task.completed && (
-                    <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${priorityConfig.bg} ${priorityConfig.color}`}>
-                        <PriorityIcon size={14} />
-                        {priorityConfig.label}
-                    </span>
-                )}    
+           
             </div>
 
             </div>
@@ -149,6 +144,13 @@ const getPriorityConfig = (priority) => {
                 >
                     {task.completed ? 'Completada' : 'Pendiente'}
                 </span>
+
+                {!task.completed && (
+                    <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${priorityConfig.bg} ${priorityConfig.color}`}>
+                        <PriorityIcon size={14} />
+                        {priorityConfig.label}
+                    </span>
+                )}    
 
               
             </div>
