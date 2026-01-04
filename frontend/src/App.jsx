@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import { taskService } from "./services/taskService";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
+import EditTaskModal from "./components/EditTaskModal";
 
 export default function App() {
     const [ tasks, setTasks ] = useState([]);
     const [ loading, setLoading ] = useState(true);
     const [ error, setError ] = useState('');
     const [ success, setSuccess ] = useState('');
+    const [ editingTask, setEditingTask ] = useState(null);
+    const [ isModalOpen, setIsModalOpen ] = useState(false);
 
     useEffect(() => {
         loadTasks();
@@ -42,10 +45,11 @@ export default function App() {
         try {
           await taskService.delete(id);
           setSuccess('Tarea eliminada');
-          loadTasks();
+          setTasks(prevTasks => prevTasks.filter(task => task._id !==id));
           setTimeout(() => setSuccess(''), 2000);
         } catch(err) {
           setError('No se pudo eliminar la tarea')
+          loadTasks();
         }
       }
     };
@@ -53,14 +57,47 @@ export default function App() {
     const handleToggleComplete = async (id, completed) => {
       try {
         await taskService.update(id, {completed});
-        loadTasks();
+        setTasks(prevTasks =>
+          prevTasks.map(task => 
+          task._id === id ? { ...task, completed } : task
+          )
+        );
       } catch(err) {
         setError('No se pudo actualizar la tarea')
+        loadTasks();
       }
     };
 
     const handleEditTask = (task) => {
-      alert(`Editar tarea:${task.title}`)
+      setEditingTask(task);
+      setIsModalOpen(true);
+    };
+
+    const handleSaveEdit = async (updatedTask) => {
+      try {
+        await taskService.update(updatedTask._id, {
+          title: updatedTask.title,
+          reminderDate: updatedTask.reminderDate,
+          priority: updatedTask.priority
+
+        });
+
+        setTasks(prevTasks =>
+          prevTasks.map(task =>
+            task._id === updatedTask._id ? updatedTask : task
+          )
+        );
+        setSuccess('Tarea actualizada');
+        setTimeout(() => setSuccess(''), 2000);
+      } catch(err) {
+        setError('Error al actualizar la tarea');
+
+      }
+    };
+
+    const handleCloseModal = () => {
+      setIsModalOpen(false);
+      setEditingTask(null);
     };
 
 
@@ -71,6 +108,7 @@ export default function App() {
             <h1 className="text-3xl font-bold text-white mb-8 text-center">
               Gestor de Tareas
             </h1>
+
 
           {loading && (
             <div className="text-center py-8">
@@ -99,9 +137,14 @@ export default function App() {
           onEdit={handleEditTask}
           onToggleComplete={handleToggleComplete}
           />
-
-         
         )}
+
+        <EditTaskModal
+         task={editingTask}
+         isOpen={isModalOpen}
+         onClose={handleCloseModal}
+         onSave={handleSaveEdit} 
+         />
       </div>
     </div>
   

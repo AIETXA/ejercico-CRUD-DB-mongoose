@@ -1,5 +1,5 @@
 import React , { useState} from "react";
-import { Plus, Bell, AlertCircle, Circle, Minus, icons } from 'lucide-react';
+import { Plus, Bell, AlertCircle, Circle, Minus } from 'lucide-react';
 
 export default function TaskForm({ onTaskCreated }) {
     const [ title, setTitle ] = useState('');
@@ -37,8 +37,8 @@ export default function TaskForm({ onTaskCreated }) {
     ];
 
     return (
-        <div className="bg-slate-900 rounded-xl shadow-lg p-6 mb-8">
-            <h2 className="text-xl font-semibold mb-4 text-white">Nueva Tarea</h2>
+        <div className="bg-slate-900 rounded-xl shadow-[0_0_10px_rgba(59,130,246,0.5)] p-6 mb-8">
+            <h2 className="text-2xl font-semibold mb-4 text-white">Nueva Tarea</h2>
         
             <div className="space-y-4">
                 <input
@@ -53,7 +53,7 @@ export default function TaskForm({ onTaskCreated }) {
             <div className="flex gap-4 flex-wrap items-center">
 
                 <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-3 font-medium">Prioridad:</span>
+                    <span className="text-sm text-gray-300 font-medium">Prioridad:</span>
                     <div className="flex gap-2">
                         {priorities.map((p) => {
                             const Icon = p.icon;
@@ -81,34 +81,30 @@ export default function TaskForm({ onTaskCreated }) {
                     </div>
                 </div>
 
-
-
-
-
-
-
-
-            <div className="flex items-center gap-4 flex-wrap">
+            <div className="flex items-center gap-4 flex-wrap ml-auto">
                 <Bell size={20} className="text-gray-300"/>
-                <label className="text-sm text-gray-300 font-medium">
+                <label className="text-sm text-gray-300 font-medium ">
                     Recordatorio (opcional):
                 </label>
                 <input
                     type="datetime-local"
                     value={reminderDate}
                     onChange={(e) => setReminderDate(e.target.value)}
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg bg-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
             </div>
 
-            <button
-                onClick={handleSubmit}
-                className="bg-[#8A10D1] hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors shadow-md hover:shadow-lg"
-                >
-                <Plus size={20} />
-                Crear
-            </button>
         </div>
+
+            <div className="flex justify-center pt-8">
+                <button
+                    onClick={handleSubmit}
+                    className="bg-blue-800 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors shadow-md hover:shadow-lg"
+                    >
+                    <Plus size={20} />
+                    Crear
+                </button>
+            </div>            
         </div>
     </div>
   );

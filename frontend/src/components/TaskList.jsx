@@ -1,5 +1,9 @@
 import React from "react";
 import { Trash2, Edit, Check, Bell, AlertCircle, Minus, Circle } from 'lucide-react';
+import { getTaskStyles } from '../helpers/getTaskStyle'
+
+
+
 
 export default function TaskList({tasks, onEdit, onDelete, onToggleComplete}) {
     if(!tasks || tasks.length === 0) {
@@ -10,34 +14,37 @@ export default function TaskList({tasks, onEdit, onDelete, onToggleComplete}) {
         );
     }
 
+
+
 const getPriorityConfig = (priority) => {
     switch(priority) {
         case 'high':
             return {
                 icon: AlertCircle,
-                color: 'text-[#EF4444]',
-                bg: 'bg-red-100',
+                color: 'text-red-900',
+                bg: 'bg-red-500',
                 border: 'border-red-500',
                 label: 'Alta'
             };
         case 'low':
             return {
                 icon: Circle,
-                color:'text-green-600',
-                bg:'bg-green-100',
+                color:'text-green-900',
+                bg:'bg-green-500',
                 border:'border-green-500',
                 label: 'Baja'
             };
         default:
             return {
                 icon: Minus,
-                color: 'text-yellow-600',
-                bg: 'bg-yellow-100',
+                color: 'text-yellow-900',
+                bg: 'bg-yellow-500',
                 border: 'border-yellow-500',
                 label: 'Media'
             };       
     }
 };
+
 
 
     return(
@@ -48,14 +55,13 @@ const getPriorityConfig = (priority) => {
                 const priorityConfig = getPriorityConfig(task.priority);
                 const PriorityIcon = priorityConfig.icon;
             
-            
+                const { border, bg } = getTaskStyles(task);    
+
         return (
-                <div 
+            <div 
                 key={task._id} 
-                className={`bg-slate-800 rounded-xl shadow-lg p-6 transition-all hover:shadow-xl ${
-                        task.completed ? 'border-l-4 border-green-500' : 'border-l-4 border-blue-500'
-                    }`}
-                >
+                className={`${bg} ${border} rounded-xl shadow-lg p-6 transition-all hover:shadow-xl`}
+            >
 
         <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
@@ -72,7 +78,7 @@ const getPriorityConfig = (priority) => {
 
                     <h3
                         className={`text-lg font-semibold ${
-                                        task.completed ? 'line-through text-gray-400' : 'text-gray-800'
+                                        task.completed ? 'line-through text-gray-300' : 'text-gray-300'
                                     }`}
                     >
                         {task.title}
@@ -112,6 +118,13 @@ const getPriorityConfig = (priority) => {
                     <p className="text-gray-600 ml-9">{task.description}</p>
 
                 )}
+                 {!task.completed && (
+                    <span className={`inline-flex items-center gap-4 rounded-full text-xs font-medium ${priorityConfig.bg} ${priorityConfig.color}`}>
+                        <PriorityIcon size={18}/>
+                        
+                    </span>
+                )}    
+
            
             </div>
 
@@ -145,13 +158,7 @@ const getPriorityConfig = (priority) => {
                     {task.completed ? 'Completada' : 'Pendiente'}
                 </span>
 
-                {!task.completed && (
-                    <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${priorityConfig.bg} ${priorityConfig.color}`}>
-                        <PriorityIcon size={14} />
-                        {priorityConfig.label}
-                    </span>
-                )}    
-
+               
               
             </div>
 
