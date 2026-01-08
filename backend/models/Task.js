@@ -5,6 +5,8 @@ const TaskSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    description: String,
+
     completed: {
         type: Boolean,
         default: false
@@ -17,6 +19,13 @@ const TaskSchema = new mongoose.Schema({
         type: String,
         enum: ['high','medium', 'low'],
         default: 'medium'
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Usuario',
+        required: true
+
+
     }
 
 }, {
