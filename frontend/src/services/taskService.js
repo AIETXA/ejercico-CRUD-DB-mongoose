@@ -1,9 +1,14 @@
+import { getAuthHeaders } from "../helpers/authHelpers";
+
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
 export const taskService = {
     getAll: async() => {
         try {
-            const response = await fetch(`${API_URL}/`);
+            const response = await fetch(`${API_URL}/api/tasks`, {
+                headers: getAuthHeaders()
+            });
+
             if(!response.ok) throw new Error('Error al obtener las tareas');
             return await response.json();
         } catch(error) {
@@ -14,9 +19,9 @@ export const taskService = {
     create: async(taskData) => {
         try {
 
-            const response = await fetch(`${API_URL}/`, {
+            const response = await fetch(`${API_URL}/api/tasks`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json'},
+                headers: getAuthHeaders(),
                 body: JSON.stringify(taskData)
             });
 
@@ -32,9 +37,9 @@ export const taskService = {
 
     update: async(id, updateData) => {
         try {
-            const response = await fetch(`${API_URL}/${id}`, {
+            const response = await fetch(`${API_URL}/api/tasks/${id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type' : 'application/json'},
+                headers: getAuthHeaders(),
                 body: JSON.stringify(updateData)
             });
             if(!response.ok) throw new Error('Error al actualizar la tarea');
@@ -47,8 +52,9 @@ export const taskService = {
 
     toggleComplete: async (id) => {
         try {
-            const response = await fetch(`${API_URL}/markAsCompleted/${id}`, {
-                method: 'PUT'
+            const response = await fetch(`${API_URL}/api/tasks/markAsCompleted/${id}`, {
+                method: 'PUT',
+                headers: getAuthHeaders()
             });
             if (!response.ok) throw new Error ('Error al actualizar el estado');
             return await response.json();
@@ -60,8 +66,9 @@ export const taskService = {
 
     delete: async (id) => {
         try {
-            const response = await fetch(`${API_URL}/${id}`, {
-                method: 'DELETE'
+            const response = await fetch(`${API_URL}/api/tasks/${id}`, {
+                method: 'DELETE',
+                headers: getAuthHeaders()
             });
             if (!response.ok) throw new Error('Error al eliminar la tarea');
             return await response.json();

@@ -12,7 +12,7 @@ export default function TaskForm({ onTaskCreated }) {
         if(title.trim()) {
             const newTask = {
                 title: title.trim(),
-                descripcion: '',
+                description: '',
                 completed: false,
                 reminderDate: reminderDate||null,
                 priority: priority
