@@ -3,8 +3,15 @@ import { taskService } from "./services/taskService";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import EditTaskModal from "./components/EditTaskModal";
+import Login from "./components/Login";
+import { useAuth } from "./hooks/AuthContext";
+import Register from "./components/Register";
 
 export default function App() {
+
+    const { isAuthenticated, loading:authLoading, user, logout } = useAuth();
+    const [ showRegister, setShowRegister ] = useState(false);
+
     const [ tasks, setTasks ] = useState([]);
     const [ loading, setLoading ] = useState(true);
     const [ error, setError ] = useState('');
@@ -13,8 +20,11 @@ export default function App() {
     const [ isModalOpen, setIsModalOpen ] = useState(false);
 
     useEffect(() => {
+      if(isAuthenticated) {
         loadTasks();
-    }, []);
+      }
+    }, [isAuthenticated]);
+
 
     const loadTasks = async () => {
         try {
@@ -100,15 +110,40 @@ export default function App() {
       setEditingTask(null);
     };
 
+    if(authLoading) {
+      return (
+        <div className="nim-h-screen bg-slate-900 flex items-center justify-center">
+          <p className="text-white text-xl">Cargando...</p>
+        </div>
+      );
+    }
+
+    if(!isAuthenticated) {
+      return showRegister ? (
+        <Register onToggleForm={() => setShowRegister(false)}/>
+        ) : (    
+        <Login onToggleForm={() => setShowRegister(true)}/>
+        );
+      }
+        
 
 
     return (
         <div className="min-h-screen bg-slate-900 from-blue-50 to-indigo-100 py-8 px-4">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-3xl font-bold text-white mb-8 text-center">
-              Gestor de Tareas
-            </h1>
-
+            <div className="flex justify-between items-center mb-8">
+              <h1 className="text-3xl font-bold text-white mb-8 text-center">
+                Gestor de Tareas
+              </h1>
+              <div className="flex items-center gap-4">
+                <span className="text-gray-300">Hola, {user?.name}</span>
+                <button
+                  onClick={logout}
+                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors">
+                    Cerrar sesión
+                </button>
+          </div>
+        </div>
 
           {loading && (
             <div className="text-center py-8">
@@ -132,18 +167,18 @@ export default function App() {
         
         {!loading && (
           <TaskList
-          tasks={tasks}
-          onDelete={handleDeleteTask}
-          onEdit={handleEditTask}
-          onToggleComplete={handleToggleComplete}
+            tasks={tasks}
+            onDelete={handleDeleteTask}
+            onEdit={handleEditTask}
+            onToggleComplete={handleToggleComplete}
           />
         )}
 
         <EditTaskModal
-         task={editingTask}
-         isOpen={isModalOpen}
-         onClose={handleCloseModal}
-         onSave={handleSaveEdit} 
+          task={editingTask}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onSave={handleSaveEdit} 
          />
       </div>
     </div>

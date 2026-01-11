@@ -40,7 +40,7 @@ const Login = ({ onToggleForm }) => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4">
-            <div className="bg-slate-700 rounded-2xl shadow-2xl p-8 w-full max-w-md border border-slate-800 ">
+            <div className="bg-slate-800 rounded-2xl shadow-[0_0_50px_rgba(29,78,216,0.7),0_0_25px_rgba(30,58,138,0.9)] p-8 w-full max-w-md border border-slate-900 ">
                 <h2 className="text-3xl font-bold text-white mb-2 text-center">
                     Bienvenido al gestor de tareas.
                 </h2>
@@ -97,7 +97,7 @@ const Login = ({ onToggleForm }) => {
                 </form>
 
                 <p className="text-center text-gray-400 text-sm mt-6">
-                    ¿Aún no tenés cuenta?{''}
+                    ¿Aún no tenés cuenta?  {''}
                     <span
                         onClick={onToggleForm}
                         className="text-blue-400 hover:text-blue-300 font-semibold cursor-pointer">

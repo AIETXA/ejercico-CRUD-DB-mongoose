@@ -1,6 +1,6 @@
-import { createContext, useState, useEffect, useContext, Children } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
 import { authService } from "../services/authService";
-import { isAuthenticated } from "../helpers/authHelpers";
+
 
 const AuthContext = createContext();
 
