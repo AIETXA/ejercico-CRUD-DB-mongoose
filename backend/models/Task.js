@@ -5,24 +5,33 @@ const TaskSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    description: String,
-
+    description: {
+        type: String 
+    },
     completed: {
         type: Boolean,
         default: false
-    },
-    reminderDate: {
-        type:Date,
-        required:false
     },
     priority: {
         type: String,
         enum: ['high','medium', 'low'],
         default: 'medium'
     },
+    folder: {
+        type: String,
+        default: 'general'
+    },
+    dueDate: {
+        type: Date,
+        default: null
+    },
+    reminderDate: {
+        type:Date,
+        required:false
+    },
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Usuario',
+        ref: 'User',
         required: true
 
 
