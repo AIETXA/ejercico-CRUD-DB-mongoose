@@ -23,7 +23,7 @@ export const authService = {
             }
             return data;
             } catch(error) {
-                console.error('Error al regisytrarse', error);
+                console.error('Error al registrarse', error);
                 throw error;
             }
     },

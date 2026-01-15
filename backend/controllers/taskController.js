@@ -5,7 +5,7 @@ const Task = require('../models/Task')
 
 exports.getTasks = async(req, res) => {
     try {
-        const tasks = await Task.find({user: req.user.id}).sort({createdAt: -1});
+        const tasks = await Task.find({user: req.userId}).sort({createdAt: -1});
         res.json(tasks);
     }catch(error) {
         res.status(500).json({message: error.message});
@@ -18,7 +18,7 @@ exports.createTask = async (req, res) => {
     try {
         const task = await Task.create({
             ...req.body,
-        user: req.user.id
+        user: req.userId
     });
         res.status(201).json(task);
     } catch(error) {
@@ -32,7 +32,7 @@ exports.updateTask = async(req, res) => {
     try {
         const task = await Task.findOne({
             _id: req.params.id, 
-            user: req.user.id
+            user: req.userId
         });
 
         if(!task) {
@@ -56,7 +56,7 @@ exports.deleteTask = async(req,res) => {
     try {
         const task = await Task.findOne({
             _id: req.params.id, 
-            user: req.user.id
+            user: req.userId
         });
 
         if(!task) {

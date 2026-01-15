@@ -15,19 +15,21 @@ exports.register = async(req, res) => {
             return res.status(400).json({message: 'El correo ya está registrado'});
         }
 
-        const salt = await bcrypt.genSalt(10);
-        const passwordHash = await bcrypt.hash(password, salt);
+        
 
         const newUser = new User({
             name,
             email,
-            password: passwordHash
+            password
         });
 
         await newUser.save();
 
+        console.log('JWT_SECRET:', process.env.JWT_SECRET);
+
+
         const token = jwt.sign(
-            { id: newUser._id },
+            { userId: newUser._id },
             process.env.JWT_SECRET,
             { expiresIn: '7d' }
         );
@@ -56,16 +58,16 @@ exports.login = async(req, res) => {
 
         const user = await User.findOne({email});
         if(!user) {
-            return res.status(400).json({message: 'Credenciales inválidas'})
+            return res.status(401).json({message: 'Credenciales inválidas'})
         }
 
         const passwordOk = await bcrypt.compare(password, user.password );
         if(!passwordOk) {
-            return res.status(400).json({message: 'Credenciales inválidas'});
+            return res.status(401).json({message: 'Credenciales inválidas'});
         }
 
         const token = jwt.sign(
-            { id: user._id },
+            { userId: user._id },
             process.env.JWT_SECRET,
             { expiresIn: '7d' }
         );
@@ -93,7 +95,7 @@ exports.verifyToken = async(req, res) => {
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await User.findById(decoded.id).select('-password');
+        const user = await User.findById(decoded.userId).select('-password');
 
         if(!user) {
             return res.status(401).json({message: 'Usuario no encontrado'});
