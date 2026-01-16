@@ -12,6 +12,10 @@ const TaskSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    completedAt: {
+        type: Date,
+        default: false
+    },
     priority: {
         type: String,
         enum: ['high','medium', 'low'],
@@ -29,6 +33,22 @@ const TaskSchema = new mongoose.Schema({
         type:Date,
         required:false
     },
+    postponed: {
+        type: Boolean,
+        default: false
+    },
+    /*postponedCount: {
+        type: Number,
+        default: 0
+    },
+    postponedHistory: [{
+        from: Date,
+        to: Date,
+        postponedAt: {
+            type: Date,
+            default: Date.now
+        }
+    }],*/
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
