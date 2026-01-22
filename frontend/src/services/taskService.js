@@ -3,9 +3,20 @@ import { getAuthHeaders } from "../helpers/authHelpers";
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
 export const taskService = {
-    getAll: async() => {
+    getAll: async(filters = {}) => {
         try {
-            const response = await fetch(`${API_URL}/api/tasks`, {
+            const params =  new URLSearchParams();
+
+            if(filters.folder) params.append('folder', filters.folder);
+            if(filters.priority) params.append('priority', filters.priority);
+            if(filters.completed !== undefined) params.append('completed', filters.completed);
+            if(filters.postponed !== undefined) params.append('postponed', filters.postponed);
+            if(filters.date) params.append('date', filters.date);
+
+            const queryString = params.toString();
+            const url = queryString ? `${API_URL}/api/tasks?${queryString}` : `${API_URL}/api/tasks`;
+            
+            const response = await fetch(url, {
                 headers: getAuthHeaders()
             });
 

@@ -27,6 +27,14 @@ exports.getTasks = async(req, res) => {
             filters.dueDate = {$gte: start, $lte: end};
         }
 
+        if(req.query.completed !== undefined) {
+            filters.completed = req.query.completed === 'true';
+        }
+
+        if(req.query.postponed !== undefined) {
+            filters.postponed = req.query.postponed === 'true';
+        }
+
         const tasks = await Task.find(filters).sort({priority: -1, createdAt: -1});
         res.json(tasks);
     }catch(error) {
@@ -53,7 +61,7 @@ exports.createTask = async (req, res) => {
 exports.updateTask = async(req, res) => {
     try {
         
-        const updatedTask = await Task.findByIdAndUpdate(
+        const updatedTask = await Task.findOneAndUpdate(
             {_id: req.params.id, user: req.userId },
             req.body,
             { new: true }
