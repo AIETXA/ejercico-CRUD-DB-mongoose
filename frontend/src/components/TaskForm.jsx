@@ -5,22 +5,34 @@ export default function TaskForm({ onTaskCreated }) {
     const [ title, setTitle ] = useState('');
     const [ reminderDate, setReminderDate ] = useState('');
     const [ priority, setPriority ] = useState('medium');
+    const [ context, setContext ] = useState('personal');
+    const [ dueDate, setDueDate ] = useState('');
+    const [ description, setDescription ] = useState('');
+    
 
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if(title.trim()) {
             const newTask = {
+                id: Date.now(),
                 title: title.trim(),
-                description: '',
+                description: description.trim(),
                 completed: false,
+                postponed: false,
                 reminderDate: reminderDate||null,
-                priority: priority
-            }
+                dueDate: dueDate || null,
+                priority: priority,
+                context: context,
+                createdAt: new Date().toISOString()
+            };
             onTaskCreated(newTask);
             setTitle('');
+            setDescription('');
             setReminderDate('');
+            setDueDate('');
             setPriority('medium');
+            setContext('personal');
         }
     };
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { taskService } from "./services/taskService";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
@@ -6,6 +6,8 @@ import EditTaskModal from "./components/EditTaskModal";
 import Login from "./components/Login";
 import { useAuth } from "./hooks/AuthContext";
 import Register from "./components/Register";
+import ThemeToggle from "./components/ThemeToggle";
+import FolderFilter from "./components/FolderFilter";
 
 export default function App() {
 
@@ -18,27 +20,34 @@ export default function App() {
     const [ success, setSuccess ] = useState('');
     const [ editingTask, setEditingTask ] = useState(null);
     const [ isModalOpen, setIsModalOpen ] = useState(false);
+    const [ selectedFolder, setSelectedFolder ] = useState('all');
 
+    
+    
+    const loadTasks = useCallback(async () => {
+      try {
+        setLoading(true);
+        const filters = {};
+        if(selectedFolder !== 'all') {
+          filters.folder = selectedFolder;
+        }
+        const data = await taskService.getAll(filters);
+        setTasks(data);
+        setError('');
+      } catch(err) {
+        setError('Error al cargar las tareas. Comprobar que el back esté corriendo');
+      } finally {
+        setLoading(false);
+      }
+    }, [selectedFolder]);
+    
     useEffect(() => {
       if(isAuthenticated) {
         loadTasks();
       }
-    }, [isAuthenticated]);
+    }, [isAuthenticated, loadTasks]);
 
-
-    const loadTasks = async () => {
-        try {
-            setLoading(true);
-            const data = await taskService.getAll();
-            setTasks(data);
-            setError('');
-        } catch(err) {
-            setError('Error al cargar las tareas. Comprobar que el back esté corriendo');
-        } finally {
-            setLoading(false);
-        }
-    };
-
+    
     const handleCreateTask = async (taskData) => {
         try {
             await taskService.create(taskData);
@@ -88,7 +97,8 @@ export default function App() {
         await taskService.update(updatedTask._id, {
           title: updatedTask.title,
           reminderDate: updatedTask.reminderDate,
-          priority: updatedTask.priority
+          priority: updatedTask.priority,
+          folder: updatedTask.folder
 
         });
 
@@ -108,6 +118,10 @@ export default function App() {
     const handleCloseModal = () => {
       setIsModalOpen(false);
       setEditingTask(null);
+    };
+
+    const handleSelectedFolder = (folder) => {
+      setSelectedFolder(folder);
     };
 
     if(authLoading) {
@@ -136,6 +150,7 @@ export default function App() {
                 Gestor de Tareas
               </h1>
               <div className="flex items-center gap-4">
+                <ThemeToggle/>
                 <span className="text-gray-300">Hola, {user?.name}</span>
                 <button
                   onClick={logout}
@@ -164,6 +179,11 @@ export default function App() {
           )}
 
         <TaskForm onTaskCreated={handleCreateTask} />
+
+        <FolderFilter
+          selectedFolder={selectedFolder}
+          onSelectFolder={handleSelectedFolder}
+          />
         
         {!loading && (
           <TaskList
